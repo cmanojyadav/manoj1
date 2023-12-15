@@ -1,0 +1,104 @@
+---
+title: "R Main explorationsS"
+author: "Manoj Yadav Chinthalaboina "
+date: "2023-12-15"
+categories: [news, code, analysis, EDA, Machine learining]
+image: "image.jpg"
+---
+
+## INTRO 
+
+In this R code , we embark on an Exploratory Data Analysis (EDA) journey using a randomly generated dataset. Our exploration covers visualizing missing values, computing summary statistics, and creating a variety of plots, including histograms, scatter plots, and boxplots, to uncover insights into the distribution and relationships within variables like Age, Height, Weight, Income, Education, and Region. Additionally, we delve into correlation analysis, constructing a correlation matrix to quantify associations. The analysis culminates in fitting a linear regression model to investigate predictive relationships. This comprehensive EDA aims to reveal patterns, outliers, and potential avenues for further analysis, offering a holistic understanding of the dataset.
+
+```{r}
+library(visdat)
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Generate random data
+num_rows <- 1000
+data <- data.frame(
+  ID = 1:num_rows,
+  Age = sample(18:60, num_rows, replace = TRUE),
+  Height = rnorm(num_rows, mean = 170, sd = 10),
+  Weight = rnorm(num_rows, mean = 70, sd = 8),
+  Income = rnorm(num_rows, mean = 50000, sd = 10000),
+  Education = sample(c("High School", "Bachelor's", "Master's", "PhD"), num_rows, replace = TRUE),
+  Region = sample(c("North", "South", "East", "West"), num_rows, replace = TRUE)
+)
+
+# Introduce missing values
+data[sample(1:num_rows, 100, replace = FALSE), "Income"] <- NA
+
+# Visualize missing values
+vis_dat(data)
+
+# Summary statistics
+summary_data <- summary(data)
+
+# Plotting
+par(mfrow = c(3, 2), mar = c(4, 4, 2, 1))
+
+# Histogram of Age
+hist(data$Age, main = "Age Distribution", xlab = "Age", col = "lightblue", border = "black")
+
+# Scatter plot of Height vs Weight
+plot(data$Height, data$Weight, main = "Height vs Weight", xlab = "Height", ylab = "Weight", col = "blue")
+
+# Boxplot of Income
+boxplot(data$Income, main = "Boxplot of Income", col = "lightgreen", border = "black", horizontal = TRUE)
+
+# Bar plot of Education
+barplot(table(data$Education), main = "Education Distribution", col = "orange", border = "black")
+
+# Pie chart of Region
+pie(table(data$Region), main = "Region Distribution", col = rainbow(length(levels(data$Region))))
+
+# Density plot of Age
+plot(density(data$Age), main = "Density Plot of Age", xlab = "Age", col = "purple", lwd = 2)
+
+# Print summary statistics
+cat("\nSummary Statistics:\n")
+print(summary_data)
+
+# Correlation matrix
+cor_matrix <- cor(data[, c("Age", "Height", "Weight", "Income")], use = "complete.obs")
+cat("\nCorrelation Matrix:\n")
+print(cor_matrix)
+
+# Regression model
+model <- lm(Weight ~ Age + Height + Income, data = data, na.action = na.exclude)
+summary_model <- summary(model)
+cat("\nLinear Regression Model:\n")
+print(summary_model)
+
+# Save plots as PNG files
+png("Age_Distribution.png")
+hist(data$Age, main = "Age Distribution", xlab = "Age", col = "lightblue", border = "black")
+dev.off()
+
+png("Height_vs_Weight.png")
+plot(data$Height, data$Weight, main = "Height vs Weight", xlab = "Height", ylab = "Weight", col = "blue")
+dev.off()
+
+png("Income_Boxplot.png")
+boxplot(data$Income, main = "Boxplot of Income", col = "lightgreen", border = "black", horizontal = TRUE)
+dev.off()
+
+png("Education_Barplot.png")
+barplot(table(data$Education), main = "Education Distribution", col = "orange", border = "black")
+dev.off()
+
+png("Region_Piechart.png")
+pie(table(data$Region), main = "Region Distribution", col = rainbow(length(levels(data$Region))))
+dev.off()
+
+png("Age_Density.png")
+plot(density(data$Age), main = "Density Plot of Age", xlab = "Age", col = "purple", lwd = 2)
+dev.off()
+
+# Display saved plots
+cat("\nPlots saved as PNG files: Age_Distribution.png, Height_vs_Weight.png, Income_Boxplot.png, Education_Barplot.png, Region_Piechart.png, Age_Density.png\n")
+```
+

@@ -1,0 +1,159 @@
+---
+title: "R Main concepts blog post"
+author: "Manoj Yadav Chinthalaboina "
+date: "2023-12-14"
+categories: [news, code, analysis]
+image: "image.jpg"
+---
+
+## Machine learning using real data set
+
+In this R script, we explore and analyze the mtcars dataset using the ggplot2 library and statistical functions. After loading the dataset, we visualize the relationship between miles per gallon and horsepower with a scatter plot. Subsequently, we subset the data to focus on cars with over 100 horsepower and perform a t-test to compare miles per gallon between high and low horsepower cars. A linear regression model is then constructed to predict miles per gallon based on horsepower, and the model is summarized for insights. Lastly, we demonstrate the use of the linear model to predict the miles per gallon for a new car with 150 horsepower, showcasing a comprehensive approach to data exploration, visualization, hypothesis testing, and predictive modeling in R.
+
+```{r}
+# Load required libraries
+library(ggplot2)
+library(ggthemes)
+
+# Load the built-in mtcars dataset
+data(mtcars)
+
+# Display the structure of the dataset
+str(mtcars)
+
+# Display the first few rows of the dataset
+head(mtcars)
+
+# Summary statistics of the dataset
+summary(mtcars)
+
+# Plotting a scatter plot of mpg against hp with ggplot2
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "skyblue") +  # Add color to points
+  labs(title = "Scatter Plot of MPG against Horsepower",
+       x = "Horsepower",
+       y = "Miles per Gallon") +
+  theme_minimal()  # Use a minimal theme
+
+# Create a subset of the dataset for cars with more than 100 horsepower
+high_hp_cars <- subset(mtcars, hp > 100)
+
+# Display the first few rows of the subset
+head(high_hp_cars)
+
+# Perform a t-test comparing miles per gallon (mpg) between high and low horsepower cars
+t_test_result <- t.test(mtcars$mpg, high_hp_cars$mpg)
+print(t_test_result)
+
+# Linear regression model to predict mpg based on horsepower
+linear_model <- lm(mpg ~ hp, data = mtcars)
+
+# Display the summary of the linear model
+summary(linear_model)
+
+# Predict the mpg for a new car with 150 horsepower
+new_car_hp <- 150
+predicted_mpg <- predict(linear_model, newdata = data.frame(hp = new_car_hp))
+print(paste("Predicted MPG for a car with", new_car_hp, "horsepower:", round(predicted_mpg, 2)))
+
+# Visualize the linear regression line along with the data points
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "skyblue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +  # Add regression line
+  labs(title = "Linear Regression: MPG against Horsepower",
+       x = "Horsepower",
+       y = "Miles per Gallon") +
+  theme_minimal()
+
+# Residual plot to check model assumptions
+residuals <- resid(linear_model)
+ggplot(mtcars, aes(x = hp, y = residuals)) +
+  geom_point(color = "orange") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "blue") +  # Add horizontal line at y = 0
+  labs(title = "Residual Plot",
+       x = "Horsepower",
+       y = "Residuals") +
+  theme_minimal()
+
+```
+
+The linear regression analysis of the mtcars dataset reveals a significant negative relationship between horsepower and miles per gallon (mpg). The model indicates that, on average, each unit increase in horsepower is associated with a decrease of 0.0682 units in mpg. The overall fit of the model is reasonable, with a low p-value and an adjusted R-squared value of 0.5892, indicating that approximately 58.92% of the variability in mpg can be explained by the linear relationship with horsepower. In practical terms, higher horsepower tends to be linked with lower fuel efficiency in the examined dataset.
+
+## SVSM RANDOM FOREST DECSISION TREE AND NAIVE BAYES MACHINE LEARNING MODEL
+
+In this code, we are exploring the application of different machine learning models to a randomly generated dataset. The dataset consists of three features (Feature1, Feature2, and Feature3) and a binary target variable (Target) with classes "Low" and "High." Four distinct models are trained on the training set: Support Vector Machine (SVM), Random Forest, Decision Tree, and Naive Bayes. Subsequently, each model is used to make predictions on the test set, and confusion matrices are generated to evaluate their performance. The confusion matrices provide insights into the accuracy of predictions, highlighting true positive, true negative, false positive, and false negative outcomes for each model. This analysis serves to compare and contrast the effectiveness of the diverse machine learning approaches employed in the context of the given dataset.
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(caret)
+library(e1071)
+library(randomForest) 
+library(rpart)
+library(naivebayes)
+library(ROCR)
+
+# Create a random well-structured DataFrame
+set.seed(456)
+n <- 200
+random_data <- data.frame(
+  Feature1 = rnorm(n),
+  Feature2 = rnorm(n),
+  Feature3 = rnorm(n),
+  Target = factor(sample(c("Low", "High"), n, replace = TRUE))
+)
+
+# Display the first few rows of the dataset
+head(random_data)
+
+# Split the dataset into training and testing sets
+set.seed(123)
+train_index <- createDataPartition(random_data$Target, p = 0.7, list = FALSE)
+train_data <- random_data[train_index, ]
+test_data <- random_data[-train_index, ]
+
+# Support Vector Machine (SVM) model
+svm_model <- svm(Target ~ ., data = train_data)
+svm_predictions <- predict(svm_model, newdata = test_data)
+
+# Random Forest model
+rf_model <- randomForest(Target ~ ., data = train_data, ntree = 100)
+rf_predictions <- predict(rf_model, newdata = test_data)
+
+# Decision Tree model
+dt_model <- rpart(Target ~ ., data = train_data, method = "class")
+dt_predictions <- predict(dt_model, newdata = test_data, type = "class")
+
+# Naive Bayes model
+nb_model <- naiveBayes(Target ~ ., data = train_data)
+nb_predictions <- predict(nb_model, newdata = test_data)
+
+# Evaluate models using caret package
+svm_metrics <- confusionMatrix(svm_predictions, test_data$Target)
+rf_metrics <- confusionMatrix(rf_predictions, test_data$Target)
+dt_metrics <- confusionMatrix(dt_predictions, test_data$Target)
+nb_metrics <- confusionMatrix(nb_predictions, test_data$Target)
+
+# Print confusion matrices
+print("Confusion Matrix for SVM:")
+print(svm_metrics)
+
+print("Confusion Matrix for Random Forest:")
+print(rf_metrics)
+
+print("Confusion Matrix for Decision Tree:")
+print(dt_metrics)
+
+print("Confusion Matrix for Naive Bayes:")
+print(nb_metrics)
+
+# Colorful EDA Visualizations
+# Example: Pair plot with color-coded Target variable
+ggplot(random_data, aes(x = Feature1, y = Feature2, color = Target)) +
+  geom_point() +
+  labs(title = "Pair Plot with Color-Coded Target Variable")
+
+# Feature Importance Plot for Random Forest
+varImpPlot(rf_model, main = "Random Forest - Feature Importance")
+
+```

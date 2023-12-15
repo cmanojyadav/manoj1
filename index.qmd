@@ -1,0 +1,23 @@
+---
+title: " Manoj Yadav Chinthalaboina "
+image: images/chintha.jpeg
+about:
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/manojwazmj
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/cmanojyadav/
+    - icon: github
+      text: Github
+      href: https://github.com/cmanojyadav
+    - icon: envelope
+      text: Mail me
+      href: mailto:Manoj.ManojYadavChinthalaboina@my.unt.e             du
+---
+
+## INFO
+
+I am Manoj from India currently in my third semester in Advanced Data Analytics in University of North Texas. I have completed Computer Science in my undergraduate studies followed by my MBA degree. Later I worked for four years in software services industry as a business developer. I have a fond interest in Mathematics from childhood which lead my way to pursue analytics.

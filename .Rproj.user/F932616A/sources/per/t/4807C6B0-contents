@@ -1,0 +1,36 @@
+project:
+  type: website
+
+website:
+  title: "Manoj Yadav Chinthalaboina"
+  favicon: "images/chintha.jpeg"
+  page-footer:
+    center: |
+      [Contact Manoj Yadav Chinthalaboina](mailto: Manoj. ManojYadavChinthalaboina@my.unt.edu)
+    left: |
+      Made with [Manoj Yadav Chinthalaboina](https://github.com/cmanojyadav/manoj1.git)
+    right: |
+      [Github Code Repo](https://github.com/cmanojyadav)
+    background: "#8a2be2"
+    
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: blog.qmd
+        text: My Blog Post
+      - href: resume.qmd
+        text: Resume
+        
+    right:
+      - icon: github
+        href: https://github.com/cmanojyadav
+      - icon: twitter
+        href: https://twitter.com/manojwazmj
+format:
+  html:
+    theme: sketchy
+    css: styles.css
+
+editor: visual
+
